@@ -1,0 +1,28 @@
+{
+  "name": "regresso",
+  "version": "1.0.0",
+  "description": "Regression tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bwillenbring/regresso.git"
+  },
+  "author": "Benjamin Willenbring",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bwillenbring/regresso/issues"
+  },
+  "homepage": "https://github.com/bwillenbring/regresso#readme",
+  "devDependencies": {
+    "cypress": "^4.5.0",
+    "cypress-plugin-retries": "^1.5.2",
+    "cypress-wait-until": "^1.7.1"
+  },
+  "dependencies": {
+    "pluralize": "^8.0.0",
+    "to-snake-case": "^1.0.0"
+  }
+}
