@@ -1,0 +1,13 @@
+from shotgun_api3 import Shotgun
+from shotgun_api3 import __version__ as VERSION
+from pprint import pprint
+from faker import Faker
+fake = Faker()
+import sys
+import os
+import json
+
+SERVER_PATH = '{baseUrl}'
+sg = Shotgun(SERVER_PATH, login='{admin_login}', password='{admin_pwd}')
+
+{command_string}

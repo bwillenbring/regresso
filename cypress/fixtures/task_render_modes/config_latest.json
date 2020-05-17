@@ -1,0 +1,10 @@
+{
+    "field_owner_entity_type": "Task",
+    "field_data_type": "image",
+    "col_name": "image",
+    "substitute_sort_field": null,
+    "allow_recode": false,
+    "image_summary_options": "none",
+    "field_custom_metadata": null,
+    "render_method": "use_latest_version_or_note"
+}
