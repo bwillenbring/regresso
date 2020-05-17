@@ -23,7 +23,7 @@ describe('Basic smoke test', function() {
                 return false;
             }
             else {
-                return SG.globals.current_user.id === Cypress.config('admin_id');
+                return SG.globals.current_user.login === Cypress.config('admin_login');
             }
         }),
         {
