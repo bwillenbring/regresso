@@ -14,6 +14,7 @@ jobs:
         cypress_admin_login: ${{ secrets.cypress_admin_login }}
         cypress_admin_pwd: ${{ secrets.cypress_admin_pwd }}
         cypress_TEST_PROJECT_ID: ${{ secrets.cypress_TEST_PROJECT_ID }}
+        slack_webhooks_url: ${{ secrets.slack_webhooks_url }}
 
 
     steps:
