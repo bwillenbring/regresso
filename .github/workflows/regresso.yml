@@ -1,7 +1,8 @@
 name: Cypress Tests
 
-on: [repository_dispatch]
-  types: test
+on: 
+  repository_dispatch:
+    types: test
 
 jobs:
   set_shared_env_vars:
