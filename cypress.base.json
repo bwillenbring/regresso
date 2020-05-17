@@ -1,0 +1,35 @@
+{
+  "testFiles": [
+    "*/**spec.js"
+  ],
+  "chromeWebSecurity": true,
+  "defaultCommandTimeout": 20000,
+  "pageLoadTimeout": 180000,
+  "fileServerFolder": "",
+  "modifyObstructiveCode": false,
+  "reporter": "mochawesome",
+  "reporterOptions": {
+    "reportDir": "reports",
+    "overwrite": false,
+    "html": false,
+    "json": true,
+    "timestamp": "mmddyyyy_HHMMss"
+  },
+  "requestTimeout": 10000,
+  "viewportHeight": 900,
+  "viewportWidth": 1440,
+  "watchForFileChanges": false,
+  "env": {
+    "RETRIES": 0
+  },
+  "_session_id": "",
+  "csrf_token": {
+    "suffix": "",
+    "value": ""
+  },
+  "TEST_PROJECT": {
+    "id": null
+  },
+  "trashAssetsBeforeRuns": true,
+  "numTestsKeptInMemory": 1
+}
