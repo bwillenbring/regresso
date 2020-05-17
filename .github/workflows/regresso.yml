@@ -1,6 +1,6 @@
 name: Cypress Tests
 
-on: repository_dispatch:
+on: [repository_dispatch]
   types: test
 
 jobs:
