@@ -1,3 +1,6 @@
+# Disallow accidental check-ins of cypress.json 
+cypress.json
+
 # Logs
 logs
 *.log
