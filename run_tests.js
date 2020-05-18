@@ -7,8 +7,10 @@ cypress_baseUrl                 baseUrl
 cypress_admin_login             admin_login
 cypress_admin_pwd               admin_pwd
 cypress_TEST_PROJECT_ID         TEST_PROJECT.id
+slack_webhooks_url              slack_webhooks_url
 ----------------------------------------------------------------------
 */
+const slack = require('./scripts/slack')
 
 // For Cypress
 const cypress = require('cypress');
@@ -17,7 +19,6 @@ const { merge } = require('mochawesome-merge');
 
 // For executing shell commands
 const shell = require('shelljs');
-
 
 // For Reading/Writing Cypress configs
 const fs = require('fs');
@@ -29,10 +30,11 @@ const path_to_config_file = './cypress.base.json';
 const path_to_new_config_file = path_to_config_file.replace('.base.json', '.json');
 const sep = '-'.repeat(75);
 
-// Overwrite your cypress configs
+// Remove any contents in the reports directories
 remove_previous_reports();
+// Overwrite your cypress configs with those generated at runtime
 rewrite_cypress_configs();
-// Now, run cypress
+// Run the cypress specs
 run_cypress();
 
 
@@ -91,6 +93,11 @@ function run_cypress() {
             console.log('At least 1 test failed! This process will be allowed to complete.');
             // process.exit(1);
         }
+
+        // Now notify via slack
+        slack.notify();
+        console.log(sep);
+        console.log(JSON.stringify(results, undefined, 2));
       },
       error => {
         generateReport()
@@ -98,4 +105,5 @@ function run_cypress() {
         process.exit(1)
       }
     )
+
 }

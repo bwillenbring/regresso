@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node run_tests.js",
-    "open": "npx cypress open"
+    "open": "npx cypress open",
+    "notify": "node ./scripts/slack.js"
   },
   "repository": {
     "type": "git",
