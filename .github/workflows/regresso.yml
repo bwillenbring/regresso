@@ -26,7 +26,7 @@ jobs:
       
       - name: Step 3 => Print client payload 
         run: |
-          echo "Client Payload: ${{ github.event.client_payload }}"
+          echo "Client Payload.body: ${{ github.event.client_payload.body }}"
 
       - name: Step 4 => build
         run: |
