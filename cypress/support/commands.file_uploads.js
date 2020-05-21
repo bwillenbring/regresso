@@ -1,46 +1,3 @@
-/**
- * @function upload_file_ui
- * @description Uploads a file in the UI by converting a file fixture into a blob, then triggering a drop event on the single file uploader.
- *
- * @author Ben Willenbring <benjamin.willenbring@autodesk.com>
- *
- * @param {Object[]} props - An object...
- * @param {String} props.first_name - A string
- * @param {Number} props.age=47 - Age whose default value is 47.
- *
- * @example
- * it('uploads a file from a files page', function() {
- *    // Go to files page
- *    cy.navigate_to_project_page('Attachment');
- *
- *    // Bring up new file entity creation form
- *    cy.invoke_new_entity_form('File');
- *
- *    // Drop a file into the form's dropzone
- *    let selector = 'div.sg_new_entity_form [sg_id="NwEnttyDlg:AttchmntCntrl"]';
- *    let fileUrl = '/img/cypress-screenshot.png';
- *
- *    // Call the method
- *    cy.upload_file_ui(selector, fileUrl);
- *
- *    // Click 'Create File'
- *    cy.get('div.controls input[sg_selector="button:create"]').click();
- *
- *    // Wait for 'Uploading...' Progress indicator to appear & disappear
- *    cy.get('div.progress_indicator_overlay').should('contain', 'Uploading...');
- *    cy.get('div.progress_indicator_overlay').should('not.be.visible');
- * });
-*/
-
-Cypress.Commands.add('upload_file_ui', (selector, fileUrl, type = '') => {
-    return cy.fixture(fileUrl, 'base64').then(Cypress.Blob.base64StringToBlob).then(blob => {
-        const nameSegments = fileUrl.split('/');
-        const name = nameSegments[nameSegments.length - 1];
-        const testFile = new File([blob], name, { type });
-        const event = { dataTransfer: { files: [testFile] } };
-        return cy.get(selector).trigger('drop', event);
-    });
-});
 
 /**
  * @function upload_file
@@ -79,7 +36,7 @@ Cypress.Commands.add('upload_file_ui', (selector, fileUrl, type = '') => {
  *
  */
 Cypress.Commands.add('upload_file', (options = {}) => {
-    const cmd = 'python fixtures/python/upload_file.py';
+    const cmd = 'python cypress/fixtures/python/upload_file.py';
 
     // These will become os.environ vars inside of python
     const python_vars = {
@@ -164,43 +121,3 @@ Cypress.Commands.add('upload_file_curl', function(options) {
         console.log($out.stdout);
     });
 });
-
-// This should be removed.
-Cypress.Commands.add('upload_file_old', (options = {}) => {
-    //
-    cy
-        .exec(
-            'python fixtures/python/upload_file.py ' +
-                '-file_name ' +
-                options.file_name +
-                ' ' +
-                '-field_name ' +
-                options.field_name +
-                ' ' +
-                '-entity_type ' +
-                options.entity_type +
-                ' ' +
-                '-entity_id ' +
-                options.entity_id +
-                ' ' +
-                '-baseUrl ' +
-                Cypress.config('baseUrl') +
-                ' ' +
-                '-admin_login ' +
-                Cypress.config('admin_login') +
-                ' ' +
-                '-admin_pwd ' +
-                Cypress.config('admin_pwd') +
-                ' ' +
-                '-TOKEN ' +
-                Cypress.config('TOKEN').body.access_token,
-            { failOnNonZeroExit: true }
-        )
-        .its('code')
-        .should(
-            'eq',
-            0,
-            'Upload of ' + options.file_name + ' to ' + options.entity_type + ' ' + options.entity_id + ' succeeded.'
-        );
-});
-
