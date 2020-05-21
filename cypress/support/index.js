@@ -9,12 +9,14 @@ import './commands.crud';
 import './commands.entity_query_page';
 import './commands.exporter';
 import './commands.file_uploads';
-//import './commands.inbox_notifications';
+import './commands.inbox_notifications';
 import './commands.routes';
 import './commands.login';
 import './commands.navigation';
 import './commands.qb';
+import './commands.regression'
 import './commands.routes';
+import './commands.thumbnails';
 import './commands.wrkflw';
 
 Cypress.on('uncaught:exception', (err, runnable) => {
