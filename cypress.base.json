@@ -1,7 +1,4 @@
 {
-  "testFiles": [
-    "*/**spec.js"
-  ],
   "chromeWebSecurity": true,
   "defaultCommandTimeout": 20000,
   "pageLoadTimeout": 180000,
@@ -10,7 +7,7 @@
   "reporter": "mochawesome",
   "reporterOptions": {
     "reportDir": "reports",
-    "overwrite": false,
+    "overwrite": true,
     "html": false,
     "json": true,
     "timestamp": "mmddyyyy_HHMMss"
@@ -21,14 +18,6 @@
   "watchForFileChanges": false,
   "env": {
     "RETRIES": 0
-  },
-  "_session_id": "",
-  "csrf_token": {
-    "suffix": "",
-    "value": ""
-  },
-  "TEST_PROJECT": {
-    "id": null
   },
   "trashAssetsBeforeRuns": true,
   "numTestsKeptInMemory": 1
