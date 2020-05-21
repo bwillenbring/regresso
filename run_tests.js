@@ -37,11 +37,12 @@ rewrite_cypress_configs();
 // Run the cypress specs
 run_cypress();
 
-
 function remove_previous_reports() {
+    console.log('Removing all previous reports...');
     const path = process.cwd();
     shell.cd(process.cwd());
-    shell.exec(`rm -r mochawesome-report; rm reports/*.json`);
+    shell.exec('if test -d mochawesome-report; then rm -r mochawesome-report; else echo "No mochawesome directory found"; fi');
+    shell.exec('if test -b reports/*.json; then rm reports/*.json; else echo "No reports found"; fi');
 }
 
 // This is the function that merges several json files into 1 json file
@@ -64,6 +65,7 @@ function rewrite_cypress_configs() {
     configs.TEST_PROJECT = {
         "id": parseInt(process.env['cypress_TEST_PROJECT_ID'] || '0')
     }
+
     // Write the new config
     write(configs, path_to_new_config_file);
     // console log the output
@@ -78,32 +80,33 @@ function rewrite_cypress_configs() {
 function run_cypress() {
     // Run the cypress specs
     cypress.run().then((results) => {
-        // Print out the results of the run...
-        // console.log(results)
-        console.log('Run is done! Report is next!');
+        if (results) {
+            // Print out the results of the run...
+            console.log('Run is done! Report is next!');
+            console.log(JSON.stringify(results, undefined, 2));
 
-        // Run mochawesome-merge on all .json files using these options
-        const options = {
-          files: ['./reports/*.json'],
+            // Run mochawesome-merge on all .json files using these options
+            const options = { files: ['./reports/*.json'] }
+            generateReport(options);
+
+            // If any test fails, send an exit code of 1 so CI knows there is a problem
+            if (results.totalFailed > 0) {
+                console.log('At least 1 test failed! This process will be allowed to complete.');
+                // process.exit(1);
+            }
+
+            // Now notify via slack
+            slack.notify();
+            console.log(sep);
+            console.log(JSON.stringify(results, undefined, 2));
         }
-        generateReport(options);
-
-        // If any test fails, send an exit code of 1 so CI knows there is a problem
-        if (results.totalFailed > 0) {
-            console.log('At least 1 test failed! This process will be allowed to complete.');
-            // process.exit(1);
+        else {
+            console.log('NO results');
         }
-
-        // Now notify via slack
-        slack.notify();
-        console.log(sep);
-        console.log(JSON.stringify(results, undefined, 2));
-      },
-      error => {
-        generateReport()
+    },
+    error => {
+        // generateReport()
         console.error(error)
         process.exit(1)
-      }
-    )
-
+    })
 }
