@@ -10,7 +10,8 @@ cypress_TEST_PROJECT_ID         TEST_PROJECT.id
 slack_webhooks_url              slack_webhooks_url
 ----------------------------------------------------------------------
 */
-const slack = require('./scripts/slack')
+const slack = require('./scripts/slack');
+const recipient = process.env['slack_recipient'];
 
 // For Cypress
 const cypress = require('cypress');
@@ -42,7 +43,7 @@ function remove_previous_reports() {
     const path = process.cwd();
     shell.cd(process.cwd());
     shell.exec('if test -d mochawesome-report; then rm -r mochawesome-report; else echo "No mochawesome directory found"; fi');
-    shell.exec('if test -b reports/*.json; then rm reports/*.json; else echo "No reports found"; fi');
+    shell.exec('if test reports/*.json; then rm reports/*.json; else echo "No reports found"; fi');
 }
 
 // This is the function that merges several json files into 1 json file
@@ -66,6 +67,9 @@ function rewrite_cypress_configs() {
         "id": parseInt(process.env['cypress_TEST_PROJECT_ID'] || '0')
     }
 
+    // Testing to limit the files 
+    // configs.testFiles = ['*/RG-xss*'];
+
     // Write the new config
     write(configs, path_to_new_config_file);
     // console log the output
@@ -81,9 +85,10 @@ function run_cypress() {
     // Run the cypress specs
     cypress.run().then((results) => {
         if (results) {
+            // First, write results to disk
+            write(results, './results.json')
             // Print out the results of the run...
             console.log('Run is done! Report is next!');
-            console.log(JSON.stringify(results, undefined, 2));
 
             // Run mochawesome-merge on all .json files using these options
             const options = { files: ['./reports/*.json'] }
@@ -96,12 +101,18 @@ function run_cypress() {
             }
 
             // Now notify via slack
-            slack.notify();
-            console.log(sep);
-            console.log(JSON.stringify(results, undefined, 2));
+            slack.notify({
+                msg: '*Regression Test Run has completed with results below*',
+                testResults: results,
+                recipient: recipient
+            });
         }
         else {
             console.log('NO results');
+            slack.notify({
+                msg: 'There were NO results!',
+                recipient: recipient
+            })
         }
     },
     error => {
