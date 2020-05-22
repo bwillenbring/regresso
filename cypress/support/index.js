@@ -26,17 +26,35 @@ Cypress.on('uncaught:exception', (err, runnable) => {
     return false;
 });
 
-// Capture retries in build log
-afterEach(function() {
-    // Get the current retry number
-    const r = Cypress.currentTest.currentRetry();
-    // Only log output to the build log if you are on a retry
-    if (r > 0 && this.currentTest.type === 'test') {
-        cy.log('--------------------------------------------------');
-        cy.log(`RETRY_ATTEMPT=${r}`);
-        cy.log(`RETRY_TESTCASE=${this.currentTest.title}`);
-        cy.log(`RETRY_STATUS=${this.currentTest.state}`);
-        cy.log(`SPEC=${Cypress.spec.relative}`);
-        cy.log('--------------------------------------------------');
+before(function() {
+    // In case the `all_tests` array is not defined, set it
+    if (!Cypress.config('all_tests') || !Array.isArray(Cypress.config('all_tests'))) {
+        Cypress.config('all_tests', []);
     }
+});
+
+after(function() {
+    const s = Cypress.mocha.getRootSuite();
+    const tests = [];
+    let totalRetries = 0;
+    let totalDuration = 0;
+    // let totalDuration = 0;
+    s.eachTest(t => tests.push(t));
+    // Add up all retries (remember, if a test has no retries, this value = -1)
+    tests.forEach((t) => {
+        if (t._retries > 0) totalRetries += t._retries;
+        totalDuration += t.duration;
+    })
+
+    const obj = {
+        title: s.suites[0].title,
+        file: s.file,
+        totalTests: tests.length,
+        totalPassed: tests.filter(t => t.state === 'passed').length,
+        totalFailed: tests.filter(t => t.state === 'failed' || t.err).length,
+        totalRetries: totalRetries,
+        totalDuration: totalDuration
+    }
+    // Here we log the run
+    cy.task('log_run', obj);
 });
