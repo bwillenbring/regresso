@@ -48,7 +48,7 @@ module.exports = {
     },
     notify: async({
         msg='Greetings from Regresso!',
-        salutation='You have a message!'
+        salutation='You have a message!',
         recipient=null,
         testResults=null
     }={}) => {
