@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node run_tests.js",
     "open": "npx cypress open",
-    "notify": "node ./scripts/slack.js"
+    "single_test": "npx cypress run -s 'cypress/integration/smoke/RG-10065*'",
+    "notify": "node ./scripts/slack.js",
+    "acknowledge_receipt": "node ./scripts/slack.js --msg='Your build is now staring' --recipient='${slack_recipient}'"
   },
   "repository": {
     "type": "git",
