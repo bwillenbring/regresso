@@ -282,3 +282,20 @@ Cypress.Commands.add('enable_event_pipeline_emails', function() {
     // 4. Set Feature => Enable Webhooks APP to 'Yes'
     cy.set_preference({ enable_webhooks_app: 'yes' });
 });
+
+Cypress.Commands.add('set_coverage', function({ documentation = '', tickets = [], sg_jira_issue_key = '' } = {}) {
+    // Set the primary jira issue key
+    if (sg_jira_issue_key) {
+        Cypress.config('workflow_sg_jira_issue_key', sg_jira_issue_key);
+    }
+    // Get the current value of workflow_documentation
+    let docs = Cypress.config('workflow_documentation') || [];
+    
+    // Add the documentation to an existing array of documentation
+    docs.push({
+        documentation: documentation,
+        tickets: Array.from(new Set(tickets)) || [],
+    });
+    // Add the docs to the config
+    Cypress.config('workflow_documentation', docs);
+});
