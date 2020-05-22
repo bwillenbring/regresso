@@ -24,7 +24,7 @@ jobs:
 
       - name: Step 2 => Acknowledge Receipt
         run: |
-          npm run acknowledge_receipt
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hey there! Your build is about to fire up!!", "channel": "$slack_recipient"}' $slack_webhooks_url
           printenv
           echo "Client Payload.user_name: ${{ github.event.client_payload.user_name }}"
           echo "Client Payload.response_url: ${{ github.event.client_payload.response_url }}"
@@ -34,6 +34,7 @@ jobs:
           python -V
           pip -V
           pip install --trusted-host pypi.python.org -r requirements.txt
+          curl -X POST -H 'Content-type: application/json' --data '{"text":":successful: Python libs installed!", "channel": "$slack_recipient"}' $slack_webhooks_url
 
       - name: Step 4 => build
         run: |
