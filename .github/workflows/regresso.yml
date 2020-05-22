@@ -22,8 +22,9 @@ jobs:
       - name: Step 1 => Checkout
         uses: actions/checkout@v1
 
-      - name: Step 2 => Print client_payload vars 
+      - name: Step 2 => Acknowledge Receipt
         run: |
+          npm run acknowledge_receipt
           echo "Client Payload.user_name: ${{ github.event.client_payload.user_name }}"
           echo "Client Payload.response_url: ${{ github.event.client_payload.response_url }}"
         
