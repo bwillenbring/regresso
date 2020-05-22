@@ -24,13 +24,10 @@ jobs:
 
       - name: Step 2 => Acknowledge Receipt
         run: |
-          npm run acknowledge_receipt
+          # npm run acknowledge_receipt
+          printenv
           echo "Client Payload.user_name: ${{ github.event.client_payload.user_name }}"
           echo "Client Payload.response_url: ${{ github.event.client_payload.response_url }}"
-        
-      - name: Step 3 => printenv
-        run: |
-          printenv
 
       - name: Step 4 => build
         run: |
