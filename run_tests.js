@@ -68,7 +68,7 @@ function rewrite_cypress_configs() {
     }
 
     // Testing to limit the files 
-    // configs.testFiles = ['*/RG-xss*'];
+    configs.testFiles = ['*/review_notes_app.spec*'];
 
     // Write the new config
     write(configs, path_to_new_config_file);
