@@ -1,5 +1,7 @@
 # Disallow accidental check-ins of cypress.json 
-cypress.json
+*.json
+!package.json
+!package-lock.json
 
 # Logs
 logs
