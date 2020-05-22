@@ -168,7 +168,7 @@ module.exports = {
 if (args.recipient && args.msg) {
     const params = {
         recipient: args.recipient,
-        msg: msg
+        msg: args.msg
     }
     if (args.salutation) params.salutation = args.salutation;
     module.exports.notify(params);
