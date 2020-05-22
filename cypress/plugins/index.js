@@ -39,13 +39,16 @@ const slack = require('../../scripts/slack');
                 `Total Passed: ${run.totalPassed}\n` +
                 `Total Retries: ${run.totalRetries}\n` +
                 `Total Duration (ms): ${run.totalDuration}\n\n`;
-
-            slack.notify({
+            
+            const params = {
                 msg: msg,
                 recipient: process.env['slack_recipient'],
                 salutation: `${run.title} just finished!`,
                 addendum: testResults
-            })
+            }
+
+            slack.notify(params);
+            console.log(JSON.stringify(params, undefined, 2));
             console.log(JSON.stringify(run, undefined, 2));
             console.log(testResults);
             return true;
