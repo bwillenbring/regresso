@@ -20,6 +20,9 @@ describe('xss Checks', function() {
         cy.set_page_mode('list'); // eg: list, thumb, md, task
         // Invoke importer
         cy.invoke_importer('Shots');
+        // Verify that the importer is there
+        cy.get('[data-cy="importer_dialog"]').as('importer').should('be.visible');
+
         // Paste sketchy data into the importer
         const pastePayload = sanitize_csv_input(`
             Shot Code
@@ -30,23 +33,27 @@ describe('xss Checks', function() {
             <img src="" onerror=alert(1)>
         `);
 
+        // Paste in the data 
         cy.get('[sg_id="Imprtr:ImprtrGtDt"] [sg_selector="drop_area"]').paste({
             pastePayload: pastePayload,
             simple: false,
         });
 
-        // Verify you're on step 2
-        cy.get('[data-cy="importer_dialog"] .step.active').should('contain','Step 2');
-        // Click continue
-        cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]').click();
-        // Verify you're on step 3
-        cy.get('[data-cy="importer_dialog"] .step.active').should('contain','Step 3');
-        // Click continue
-        cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]').click();
-        // Verify you're on step 4
-        cy.get('[data-cy="importer_dialog"] .step.active').should('contain','Step 4');
-        // Click continue
-        cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]').click();
+        // Some importers have 3 steps - others have 4 
+        cy.get('[data-cy="importer_dialog"] .steps .step').its('length').then(total_steps => {
+            cy.log(`This importer has ${total_steps} steps`);
+            // Ensure you're at step 2 => then continue
+            cy.get('@importer').find('.step.active').should('contain', 'Step 2');
+            cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]:enabled').click({ force: true });
+            // Ensure you're at step 3 => then continue
+            cy.get('@importer').find('.step.active').should('contain', 'Step 3');
+            cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]:enabled').click({ force: true });
+            if (total_steps > 3) {
+                // Click Contine a 4th time one more time 
+                cy.log('This importer has a 4th step!');
+                cy.get('[data-cy="importer_dialog"] [sg_selector="input.continue"]:enabled').click({ force: true });
+            } 
+        });
 
         //Prog indicator should be visible
         cy.get('[sg_id="label:progress_indicator"]').should('be.visible');
@@ -55,10 +62,11 @@ describe('xss Checks', function() {
         // Then the success message => click success choice
         cy.get('.sgc_importer.success').should('be.visible').and('contain','Success!')
             .find('.success_choice:contains("Go back to the page where you started")').click();
-        cy.get('.sgc_importer.success').should('not.be.visible')
+        cy.get('.sgc_importer.success').should('not.be.visible');
 
         // Assert that an alert never happened
         // Assert that an alert DID NOT OCCUR
-        expect(alert).not.to.be.called;
+        cy.then(() => expect(alert).not.to.be.called);
+        
     });
 });
