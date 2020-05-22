@@ -50,7 +50,8 @@ module.exports = {
         msg='Greetings from Regresso!',
         salutation='You have a message!',
         recipient=null,
-        testResults=null
+        testResults=null,
+        addendum=null
     }={}) => {
         // Begin forming Slack Message
         const url = process.env['slack_webhooks_url'];
@@ -67,11 +68,16 @@ module.exports = {
                 blocks.push(block, divider);
             });
         }
+        if (addendum) {
+            blocks.pop();
+            let block = module.exports.build_block({ type: 'context', text: addendum });
+            blocks.push(block, divider)
+        }
         // -----
         // Compose the message request
         data = {
             channel: recipient, 
-            text: 'Hi!',
+            text: salutation,
             blocks: blocks,
         }
         console.log(JSON.stringify(data, undefined, 2));
