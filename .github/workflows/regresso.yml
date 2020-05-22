@@ -15,8 +15,8 @@ jobs:
         cypress_admin_pwd: ${{ secrets.cypress_admin_pwd }}
         cypress_TEST_PROJECT_ID: ${{ secrets.cypress_TEST_PROJECT_ID }}
         slack_webhooks_url: ${{ secrets.slack_webhooks_url }}
-        user_name: ${{ github.event.client_payload.user_name }}
-        response_url: ${{ github.event.client_payload.response_url }}
+        slack_recipient: ${{ github.event.client_payload.user_name }}
+        slack_response_url: ${{ github.event.client_payload.response_url }}
 
     steps:
       - name: Step 1 => Checkout
