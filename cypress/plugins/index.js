@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+const slack = require('../../scripts/slack');
+
  module.exports = (on, config) => {
     /**
     * @function append_log
@@ -22,5 +24,31 @@
             arguments.length > 1 ? console.log(message, ',', options) : console.log(message);
             return true;
         },
+
+        log_run(run) {
+            // Did the run succeed?
+            let status;
+            if (run.totalFailed > 0) {
+                status = ':failed:'
+            } else {
+                status = ':successful:'
+            }
+            const msg = `${status} *${run.title}*\n`;
+            const testResults = `File: ${run.file}\n` +
+                `Total Tests: ${run.totalTests}\n` +
+                `Total Passed: ${run.totalPassed}\n` +
+                `Total Retries: ${run.totalRetries}\n` +
+                `Total Duration (ms): ${run.totalDuration}\n\n`;
+
+            slack.notify({
+                msg: msg,
+                recipient: process.env['slack_recipient'],
+                salutation: `${run.title} just finished!`,
+                addendum: testResults
+            })
+            console.log(JSON.stringify(run, undefined, 2));
+            console.log(testResults);
+            return true;
+        }
     });
 };
