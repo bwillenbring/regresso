@@ -38,7 +38,7 @@ jobs:
 
       - name: Step 4 => build
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Starting npm install", "channel": "$slack_recipient"}' $slack_webhooks_url
+          curl -X POST -H 'Content-type: application/json' --data '{"text":":successul: Starting npm install", "channel": "$slack_recipient"}' $slack_webhooks_url
           npm install
           curl -X POST -H 'Content-type: application/json' --data '{"text":":successful: Cypress is starting now!", "channel": "$slack_recipient"}' $slack_webhooks_url
           npm run test
