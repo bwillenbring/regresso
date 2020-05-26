@@ -1,5 +1,5 @@
-PyYAML == 3.13
+#PyYAML == 3.13
 inflect == 0.2.5
-requests == 2.18.4
+requests == 2.20.0
 git+https://github.com/shotgunsoftware/python-api.git@v3.0.37
 pathlib == 1.0.1
